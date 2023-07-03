@@ -76,4 +76,44 @@
 
 > ```USE FriendsOfMan;```
 
-* создание таблиц:
+# Cоздание таблиц:
+
+> CREATE TABLE domestic_animals (
+>    ID INT PRIMARY KEY AUTO_INCREMENT,
+>    Species VARCHAR(100),
+>    Name VARCHAR(100),
+>    Command VARCHAR(100),
+>    BirthDate DATE
+> );
+
+> CREATE TABLE farm_animals (
+>    ID INT PRIMARY KEY AUTO_INCREMENT,
+>    Species VARCHAR(100),
+>    Name VARCHAR(100),
+>    Command VARCHAR(100),
+>    BirthDate DATE
+> );
+
+# Добавление данных в таблицу domestic_animals
+
+> INSERT INTO domestic_animals (Species, Name, Command, BirthDate) VALUES ('Dog', 'Rex', 'Sit', '2021-01-01');
+
+> INSERT INTO domestic_animals (Species, Name, Command, BirthDate) VALUES ('Cat', 'Mittens', 'Jump', '2020-06-01');
+
+> INSERT INTO domestic_animals (Species, Name, Command, BirthDate) VALUES > ('Hamster', 'Chewie', 'Run', '2022-05-01');
+
+# Добавление данных в таблицу farm_animals
+
+> INSERT INTO farm_animals (Species, Name, Command, BirthDate) VALUES ('Horse', 'Thunder', 'Gallop', '2019-07-01');
+
+> INSERT INTO farm_animals (Species, Name, Command, BirthDate) VALUES ('Camel', 'Sandy', 'Walk', '2018-03-01');
+
+> INSERT INTO farm_animals (Species, Name, Command, BirthDate) VALUES ('Donkey', 'Bray', 'Carry', '2017-10-01');
+
+# Удаление верблюда из таблицы, в связи с переводом в другой питомник
+
+> DELETE FROM farm_animals WHERE Species = 'Camel';
+
+
+
+
