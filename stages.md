@@ -114,6 +114,73 @@
 
 > DELETE FROM farm_animals WHERE Species = 'Camel';
 
+# Операция "Молодняк". Выборка всех молодых животных и запись в новую таблицу:
 
+> ```CREATE TABLE``` young_animals (
+>    ID INT PRIMARY KEY AUTO_INCREMENT,
+>    Species VARCHAR(100),
+>    Name VARCHAR(100),
+>    Command VARCHAR(100),
+>    BirthDate DATE,
+>    AgeInMonths INT
+> );
 
+>```INSERT INTO``` young_animals (Species, Name, Command, BirthDate, AgeInMonths)
+>```SELECT``` 
+>    Species, 
+>    Name, 
+>    Command, 
+>    BirthDate, 
+>    TIMESTAMPDIFF(MONTH, BirthDate, CURDATE()) ```AS``` AgeInMonths 
+>```FROM``` 
+>    (
+>        ```SELECT``` * FROM domestic_animals
+>        ```UNION ALL```
+>        ```SELECT``` * FROM farm_animals
+>    ) ```AS``` animals 
+>```WHERE``` 
+>    TIMESTAMPDIFF(YEAR, BirthDate, CURDATE()) > 1 AND
+>    TIMESTAMPDIFF(YEAR, BirthDate, CURDATE()) < 3;
 
+**Такой запрос выберет всех животных старше 1 года, но младше 3 лет из таблиц domestic_animals и farm_animals, посчитает их возраст в месяцах и добавит эти данные в новую таблицу young_animals.
+
+# Объединение всех таблиц с сохранение принадлежности
+> ```CREATE TABLE``` all_animals (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Species VARCHAR(100),
+    Name VARCHAR(100),
+    Command VARCHAR(100),
+    BirthDate DATE,
+    AgeInMonths INT,
+    SourceTable VARCHAR(100)
+);
+
+> ```INSERT INTO``` all_animals (Species, Name, Command, BirthDate, AgeInMonths, SourceTable)
+```SELECT``` 
+    Species, 
+    Name, 
+    Command, 
+    BirthDate, 
+    TIMESTAMPDIFF(MONTH, BirthDate, CURDATE()), 
+    'domestic_animals'
+```FROM``` domestic_animals
+```UNION ALL```
+```SELECT``` 
+    Species, 
+    Name, 
+    Command, 
+    BirthDate, 
+    TIMESTAMPDIFF(MONTH, BirthDate, CURDATE()), 
+    'farm_animals'
+```FROM``` farm_animals
+```UNION ALL```
+```SELECT``` 
+    Species, 
+    Name, 
+    Command, 
+    BirthDate, 
+    AgeInMonths, 
+    'young_animals'
+```FROM``` young_animals;
+
+** Таким образом, в новой таблице all_animals будет сохранена информация о том, из какой исходной таблицы была получена каждая запись.
