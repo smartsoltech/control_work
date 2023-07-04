@@ -67,14 +67,17 @@ def create_table(conn, create_table_sql):
 
 def insert_record(table, data):
     conn = create_connection()
+    print(f'Вызов функции insert_record с агрументами: {table}, {data}')
     if conn is not None:
         try:
             c = conn.cursor()
             info = data.split(" ")
-            if table == "domestic_animals":
-                c.execute("INSERT INTO domestic_animals (name, command, birth_date) VALUES (?, ?, ?)", data)
-            elif table == "farm_animals":
-                c.execute("INSERT INTO farm_animals (name, command, birth_date) VALUES (?, ?, ?)", data)
+            if table == 1:
+                print(f'Запись данных {data.split(" ")} в таблицу {table}')
+                c.execute("INSERT INTO domestic_animals (name, command, birth_date) VALUES (?, ?, ?)", info)
+            elif table == 2:
+                print(f'Запись данных {data.split(" ")} в таблицу {table}')
+                c.execute("INSERT INTO farm_animals (name, command, birth_date) VALUES (?, ?, ?)", info)
             conn.commit()
             print("Record inserted successfully")
         except sqlite3.Error as e:
@@ -87,9 +90,9 @@ def delete_record(table, id):
     if conn is not None:
         try:
             c = conn.cursor()
-            if table == "domestic_animals":
+            if table == 1:
                 c.execute("DELETE FROM domestic_animals WHERE id=?", (id,))
-            elif table == "farm_animals":
+            elif table == 2:
                 c.execute("DELETE FROM farm_animals WHERE id=?", (id,))
             conn.commit()
             print("Record deleted successfully")
@@ -103,12 +106,12 @@ def view_records(table):
     if conn is not None:
         try:
             c = conn.cursor()
-            if table == "domestic_animals":
+            if table == 1:
                 c.execute("SELECT * FROM domestic_animals")
                 rows = c.fetchall()
                 for row in rows:
                     print(row)
-            elif table == "farm_animals":
+            elif table == 2:
                 c.execute("SELECT * FROM farm_animals")
                 rows = c.fetchall()
                 for row in rows:
@@ -123,12 +126,12 @@ def search_records(table, keyword):
     if conn is not None:
         try:
             c = conn.cursor()
-            if table == "domestic_animals":
+            if table == 1:
                 c.execute("SELECT * FROM domestic_animals WHERE name LIKE ? OR command LIKE ?", ('%' + keyword + '%', '%' + keyword + '%'))
                 rows = c.fetchall()
                 for row in rows:
                     print(row)
-            elif table == "farm_animals":
+            elif table == 2:
                 c.execute("SELECT * FROM farm_animals WHERE name LIKE ? OR command LIKE ?", ('%' + keyword + '%', '%' + keyword + '%'))
                 rows = c.fetchall()
                 for row in rows:
@@ -143,14 +146,14 @@ def export_records(table, filename):
     if conn is not None:
         try:
             c = conn.cursor()
-            if table == "domestic_animals":
+            if table == 1:
                 c.execute("SELECT * FROM domestic_animals")
                 rows = c.fetchall()
                 with open(filename, 'w') as f:
                     for row in rows:
                         f.write(','.join(map(str, row)) + '\n')
                 print(f"Records exported to {filename} successfully")
-            elif table == "farm_animals":
+            elif table == 2:
                 c.execute("SELECT * FROM farm_animals")
                 rows = c.fetchall()
                 with open(filename, 'w') as f:

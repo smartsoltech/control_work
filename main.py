@@ -2,7 +2,7 @@ import __init__
 from os import getenv
 from pathlib import Path
 import sqlite3
-from db import create_connection, setup_database, insert_record, delete_record, view_records, search_records
+import db
 
 
 print(f'Database type: {getenv("DB_TYPE")}')
@@ -23,8 +23,6 @@ def show_tables_menu():
     print("Выберите таблицу:")
     print("1. Домашние животные")
     print("2. Животные фермы")
-    # Добавьте здесь другие таблицы по мере необходимости
-
     return int(input("Ваш выбор: "))
 
 
@@ -40,10 +38,10 @@ def main_test():
     if db_type == 'sqlite':
         try:
             # создаем подключение к базе данных SQLite
-            conn = create_connection()
+            conn = db.create_connection()
             # создаем базу данных
             try:
-                setup_database()
+                db.setup_database()
                 print("Database setup completed successfully")
             except Exception as e:
                 print("Failed to setup the database", e)
@@ -61,18 +59,22 @@ def main_test():
         if action == 1:
             table = show_tables_menu()
             data = input("Введите Класс, Имя, команды и дата рождения, через пробел: ")
-            insert_record(table, data)
+            db.insert_record(table, data)
+            print(f'Передача параметров в функцию {table}, {data}')
         elif action == 2:
             table = show_tables_menu()
             id = int(input("Введите номер записи для удаления: "))
-            delete_record(table, id)
+            db.delete_record(table, id)
+            print(f'Передача параметров в функцию {table}, {id}')
         elif action == 3:
             table = show_tables_menu()
-            view_records(table)
+            db.view_records(table)
+            print(f'Передача параметров в функцию {table}')
         elif action == 4:
             table = show_tables_menu()
             term = input("Введите строку поиска: ")
-            search_records(table, term)
+            db.search_records(table, term)
+            print(f'Передача параметров в функцию {table}, {term}')
         elif action == 5:
             print("Выход...")
             break
