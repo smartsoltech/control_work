@@ -5,9 +5,58 @@ import sqlite3
 import db
 
 
-print(f'Database type: {getenv("DB_TYPE")}')
-# print(f'Database file path: {db_path / db_name}')
-# print('Environment loaded successful')
+class Counter():
+    def __init__(self):
+        self.value = 0
+
+    def add(self):
+        self.value += 1
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            # Нет исключений, ресурс был успешно использован
+            return True
+        else:
+            # Было возбуждено исключение, ресурс не был корректно использован
+            return False
+
+class Animal:
+    def __init__(self, type, name, commands, birthdate):
+        self.type = type
+        self.name = name
+        self.commands = commands
+        self.birthdate = birthdate
+
+    def to_dict(self):
+        return [self.name, self.commands, self.birthdate]
+
+        
+def add_record(table):
+    with Counter() as count:
+        print("Введите данные для новой записи, разделенные пробелом:")
+        data = input().split()
+        info = Animal(type=data[0], name=data[1], commands=data[2], birthdate=data[3])
+        # print(info.name)
+        # print(info.type)
+        # print(info.commands)
+        # print(info.birthdate)
+        if len(data) == 4:
+                count.add()
+                # Создаем объект класса Animal и передаем значения в конструктор
+                animal = Animal(type=data[0], name=data[1], commands=data[2], birthdate=data[3])
+                # Извлекаем значения из объекта Animal
+                animal_data = (animal.name, animal.commands, animal.birthdate)
+                # Вставляем данные в таблицу
+                db.insert_record(table, animal_data)
+                print("Запись успешно добавлена")
+        else:
+            raise ValueError("Неверный формат данных. Заполните все поля.")
+# print(f'Database type: {getenv("DB_TYPE")}')
+# # print(f'Database file path: {db_path / db_name}')
+# # print('Environment loaded successful')
 
 def show_main_menu():
     print("Выберите действие:")
@@ -57,10 +106,7 @@ def main_test():
     while True:
         action = show_main_menu()
         if action == 1:
-            table = show_tables_menu()
-            data = input("Введите Класс, Имя, команды и дата рождения, через пробел: ")
-            db.insert_record(table, data)
-            print(f'Передача параметров в функцию {table}, {data}')
+            add_record(1)
         elif action == 2:
             table = show_tables_menu()
             id = int(input("Введите номер записи для удаления: "))
