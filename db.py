@@ -71,13 +71,12 @@ def insert_record(table, data):
     if conn is not None:
         try:
             c = conn.cursor()
-            info = data.split(" ")
             if table == 1:
-                print(f'Запись данных {data.split(" ")} в таблицу {table}')
-                c.execute("INSERT INTO domestic_animals (name, command, birth_date) VALUES (?, ?, ?)", info)
+                print(f'Запись данных {data} в таблицу {table}')
+                c.execute("INSERT INTO domestic_animals (name, command, birth_date) VALUES (?, ?, ?)", data)
             elif table == 2:
-                print(f'Запись данных {data.split(" ")} в таблицу {table}')
-                c.execute("INSERT INTO farm_animals (name, command, birth_date) VALUES (?, ?, ?)", info)
+                print(f'Запись данных {data} в таблицу {table}')
+                c.execute("INSERT INTO farm_animals (name, command, birth_date) VALUES (?, ?, ?)", data)
             conn.commit()
             print("Record inserted successfully")
         except sqlite3.Error as e:
